@@ -120,15 +120,23 @@ passport.use('admin-local', new LocalStrategy(Admin.authenticate()));
 
 
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-passport.serializeUser(Doctor.serializeUser());
-passport.deserializeUser(Doctor.deserializeUser());
-passport.serializeUser(Admin.serializeUser());
-passport.deserializeUser(Admin.deserializeUser());
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  if(user != null)
+    done(null, user);
+});
+
+const roles = [];
+roles["admin"] = Admin;
+roles["doctor"] = Doctor;
+roles["user"] = User
 
 
 app.get("/", function(req, res){
+  console.log(req.session);
   res.render("home");
 })
 app.get("/login", function(req, res){
@@ -151,7 +159,7 @@ app.get("/admin/register", function(req, res){
 })
 
 app.get("/profile", function(req, res) {
-  User.find({_id: req.user._id}, (err, user) => {
+  roles[req.user.role].find({_id: req.user._id}, (err, user) => {
     if (err){
       console.log(err);
     }
@@ -196,7 +204,7 @@ app.get("/appointments/doctors", function(req, res){
 
 app.get("/admin/addTest", function(req, res){
   console.log(req.user);
-  if (req.isAuthenticated()){
+  if (req.isAuthenticated() && req.user.role == "admin"){
     res.render("addTest");
   }
   else{
