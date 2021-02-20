@@ -1,17 +1,21 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session')
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
-const session = require('express-session')
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
+const MongoStore = require('connect-mongo')(session);
+const cookieParser = require('cookie-parser');
 const LocalStrategy = require('passport-local').Strategy;
 
 const findOrCreate = require('mongoose-findorcreate');
 
 
 const app = express();
+app.use(cookieParser());
+
 
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -19,21 +23,25 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
+const uri = process.env.ATLAS_URI;
+
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+mongoose.set("useCreateIndex", true);
+
+
 app.use(session({
   secret: process.env.SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: { secure: false}
+  cookie: { maxAge: 180 * 60 * 1000},
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-const uri = process.env.ATLAS_URI;
-
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
-mongoose.set("useCreateIndex", true);
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -108,6 +116,8 @@ const Admin = new mongoose.model("Admin", adminSchema);
 passport.use('user-local', new LocalStrategy(User.authenticate()));
 passport.use('doctor-local', new LocalStrategy(Doctor.authenticate()));
 passport.use('admin-local', new LocalStrategy(Admin.authenticate()));
+
+
 
 
 passport.serializeUser(User.serializeUser());
