@@ -21,8 +21,10 @@ app.use(bodyParser.urlencoded({
 
 app.use(session({
   secret: process.env.SECRET,
+  saveUninitialized: false,
   resave: false,
-  saveUninitialized: false
+  cookie: { secure: false}
+
 }));
 
 app.use(passport.initialize());
@@ -160,31 +162,36 @@ app.get("/services", function(req, res){
   })
 })
 
-app.get("/appointments", function(req, res){
-  var Appointments = []
+app.get("/appointments/tests", function(req, res){
   TestAppoint.find({userId: req.user._id}, (err, testAppointments) => {
     if (err){
       console.log(err);
     }
     else{
-      res.render("appointments", {appoints: testAppointments});
+      res.render("tappointments", {appoints: testAppointments});
     }
   })
+})
+
+app.get("/appointments/doctors", function(req, res){
   DoctorAppoint.find({userId: req.user._id}, (err, doctorAppointments) => {
     if (err){
       console.log(err);
     }
     else{
-    Appointments = Appointments.concat(doctorAppointments);
+    res.render("dappointments", {appoints: doctorAppointments});
   }
   })
-
-
-
 })
 
 app.get("/admin/addTest", function(req, res){
-  res.render("addTest");
+  console.log(req.user);
+  if (req.isAuthenticated()){
+    res.render("addTest");
+  }
+  else{
+    res.redirect("/admin/login")
+  }
 })
 
 
@@ -254,13 +261,24 @@ app.post("/admin/editTest/edit/:id", function(req, res){
 })
 
 
-app.get("/schedule", function(req, res){
+app.get("/schedule/test", function(req, res){
   Test.find({}, (err, test) => {
     if (err){
       console.log(err);
     }
     else{
-      res.render("schedule", {tests: test});
+      res.render("tschedule", {tests: test});
+    }
+  })
+})
+
+app.get("/schedule/doctor", function(req, res){
+  Doctor.find({}, (err, doctor) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      res.render("dschedule", {doctors: doctor});
     }
   })
 })
@@ -332,7 +350,9 @@ app.post("/doctor/register", function(req, res){
     dob: req.body.dob,
     gender: req.body.gender,
     address: req.body.address,
-    phoneNo: req.body.phoneNo
+    phoneNo: req.body.phoneNo,
+    fees: req.body.fees,
+    category: req.body.category
   },
   req.body.password, function(err, user){
     if (err){

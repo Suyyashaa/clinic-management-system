@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <i class="fas fa-flask fa-6x"></i>
+    <h1 class="display-3">Test Appointments</h1>
+
+    <%appoints.forEach((test) => {%>
+      <div class="card">
+        <p><%=test.name%></p>
+        <p><%=test.time%></p>
+        <p><%=test.date%></p>
+      </div>
+    <%});%>
+<br>
+
+    <hr>
+
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>
