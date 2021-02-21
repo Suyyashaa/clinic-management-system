@@ -23,12 +23,10 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
 const uri = process.env.ATLAS_URI;
 
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
 mongoose.set("useCreateIndex", true);
-
 
 app.use(session({
   secret: process.env.SECRET,
@@ -36,12 +34,10 @@ app.use(session({
   resave: false,
   cookie: { maxAge: 180 * 60 * 1000},
   store: new MongoStore({ mongooseConnection: mongoose.connection })
-
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -50,7 +46,8 @@ const userSchema = new mongoose.Schema({
   dob: String,
   gender: String,
   address: String,
-  phoneNo:String
+  phoneNo:String,
+  role: String
 });
 
 const testSchema = new mongoose.Schema({
@@ -83,15 +80,16 @@ const doctorSchema = new mongoose.Schema({
   address: String,
   phoneNo:String,
   fees: String,
-  category: String
+  category: String,
+  role: String
 });
 
 const adminSchema = new mongoose.Schema({
   username: String,
   password: String,
-  phoneNo: String
+  phoneNo: String,
+  role: String
 });
-
 
 
 
@@ -129,6 +127,7 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
+
 const roles = [];
 roles["admin"] = Admin;
 roles["doctor"] = Doctor;
@@ -136,7 +135,6 @@ roles["user"] = User
 
 
 app.get("/", function(req, res){
-  console.log(req.session);
   res.render("home");
 })
 app.get("/login", function(req, res){
@@ -159,12 +157,37 @@ app.get("/admin/register", function(req, res){
 })
 
 app.get("/profile", function(req, res) {
+  if (req.isAuthenticated()){
   roles[req.user.role].find({_id: req.user._id}, (err, user) => {
     if (err){
       console.log(err);
     }
     else{
       res.render("profile", {user: user});
+    }
+  })
+}
+  else{
+    res.redirect("/login")
+  }
+})
+
+app.get("/profile/delete/:id", function(req, res){
+  roles[req.user.role].deleteOne({_id: req.params.id}, function(err){
+    if (err){
+      console.log(err);
+    }
+    else{
+      console.log("Deleted successfully");
+      req.session.destroy(function(err){
+        if (err){
+          console.log(err);
+        }
+        else{
+          console.log("session destroyed");
+          res.redirect("/")
+        }
+      })
     }
   })
 })
@@ -346,7 +369,8 @@ app.post("/register", function(req, res){
     dob: req.body.dob,
     gender: req.body.gender,
     address: req.body.address,
-    phoneNo: req.body.phoneNo
+    phoneNo: req.body.phoneNo,
+    role: "user"
   },
   req.body.password, function(err, user){
     if (err){
@@ -370,7 +394,8 @@ app.post("/doctor/register", function(req, res){
     address: req.body.address,
     phoneNo: req.body.phoneNo,
     fees: req.body.fees,
-    category: req.body.category
+    category: req.body.category,
+    role: "doctor"
   },
   req.body.password, function(err, user){
     if (err){
@@ -388,7 +413,8 @@ app.post("/doctor/register", function(req, res){
 app.post("/admin/register", function(req, res){
   Admin.register({
     username: req.body.username,
-    phoneNo: req.body.phoneNo
+    phoneNo: req.body.phoneNo,
+    role: "admin"
   },
   req.body.password, function(err, user){
     if (err){
