@@ -133,6 +133,15 @@ roles["admin"] = Admin;
 roles["doctor"] = Doctor;
 roles["user"] = User
 
+function isLogged(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }else{
+    res.redirect("/login")
+  }
+}
+
+
 
 app.get("/", function(req, res){
   res.render("home");
@@ -203,7 +212,7 @@ app.get("/services", function(req, res){
   })
 })
 
-app.get("/appointments/tests", function(req, res){
+app.get("/appointments/tests", isLogged, function(req, res){
   TestAppoint.find({userId: req.user._id}, (err, testAppointments) => {
     if (err){
       console.log(err);
@@ -214,7 +223,7 @@ app.get("/appointments/tests", function(req, res){
   })
 })
 
-app.get("/appointments/doctors", function(req, res){
+app.get("/appointments/doctors", isLogged, function(req, res){
   DoctorAppoint.find({userId: req.user._id}, (err, doctorAppointments) => {
     if (err){
       console.log(err);
