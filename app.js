@@ -50,6 +50,26 @@ const userSchema = new mongoose.Schema({
   role: String
 });
 
+const doctorSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  name: String,
+  dob: String,
+  gender: String,
+  address: String,
+  phoneNo:String,
+  fees: String,
+  category: String,
+  role: String
+});
+
+const adminSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  phoneNo: String,
+  role: String
+});
+
 const testSchema = new mongoose.Schema({
   name: String,
   cost: String
@@ -71,25 +91,7 @@ const doctorAppointSchema = new mongoose.Schema({
   report: String
 });
 
-const doctorSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  name: String,
-  dob: String,
-  gender: String,
-  address: String,
-  phoneNo:String,
-  fees: String,
-  category: String,
-  role: String
-});
 
-const adminSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  phoneNo: String,
-  role: String
-});
 
 
 
@@ -133,11 +135,24 @@ roles["admin"] = Admin;
 roles["doctor"] = Doctor;
 roles["user"] = User
 
+app.use(function(req, res, next){
+  res.locals.login = req.isAuthenticated();
+  next();
+});
+
 function isLogged(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }else{
     res.redirect("/login")
+  }
+}
+
+function isAdmin(req, res, next){
+  if (req.isAuthenticated() && req.user.role == "admin"){
+    return next();
+  }else{
+    res.redirect("/admin/login");
   }
 }
 
@@ -165,8 +180,7 @@ app.get("/admin/register", function(req, res){
   res.render("aregister");
 })
 
-app.get("/profile", function(req, res) {
-  if (req.isAuthenticated()){
+app.get("/profile", isLogged, function(req, res) {
   roles[req.user.role].find({_id: req.user._id}, (err, user) => {
     if (err){
       console.log(err);
@@ -175,11 +189,8 @@ app.get("/profile", function(req, res) {
       res.render("profile", {user: user});
     }
   })
-}
-  else{
-    res.redirect("/login")
-  }
 })
+
 
 app.get("/profile/delete/:id", function(req, res){
   roles[req.user.role].deleteOne({_id: req.params.id}, function(err){
@@ -200,6 +211,37 @@ app.get("/profile/delete/:id", function(req, res){
     }
   })
 })
+
+app.get("/profile/edit", function(req, res){
+  roles[req.user.role].find({_id: req.user._id}, (err, user) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      //console.log(user[0]);
+      res.render("editProfile", {user: user[0]});
+    }
+  })
+})
+
+app.post("/profile/edit", function(req, res){
+  roles[req.user.role].findByIdAndUpdate({_id: req.user._id},{
+    name: req.body.name,
+    address: req.body.address,
+    dob: req.body.dob,
+    phoneNo: req.body.phoneNo,
+    gender: req.body.gender
+  }, {new: true}, function(err){
+    if (err){
+      console.log(err);
+    }
+    else{
+      console.log("Updated Successfully");
+      res.redirect("/profile")
+    }
+  })
+})
+
 
 app.get("/services", function(req, res){
   Test.find({}, (err, test) => {
@@ -234,14 +276,9 @@ app.get("/appointments/doctors", isLogged, function(req, res){
   })
 })
 
-app.get("/admin/addTest", function(req, res){
-  console.log(req.user);
-  if (req.isAuthenticated() && req.user.role == "admin"){
+app.get("/admin/addTest", isAdmin, function(req, res){
+
     res.render("addTest");
-  }
-  else{
-    res.redirect("/admin/login")
-  }
 })
 
 
@@ -261,7 +298,7 @@ app.post("/admin/addTest", function(req, res){
   })
 })
 
-app.get("/admin/editTest", function(req, res){
+app.get("/admin/editTest", isAdmin, function(req, res){
   Test.find({}, (err, test) => {
     if (err){
       console.log(err);
@@ -494,6 +531,19 @@ app.post("/admin/login", function(req, res){
     }
   })
 });
+
+app.get("/logout", function(req, res){
+req.logout();
+  req.session.destroy(function(err){
+    if (err){
+      console.log(err);
+    }
+    else{
+      console.log("session destroyed");
+      res.redirect("/")
+    }
+  })
+})
 
 
 
