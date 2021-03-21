@@ -1,4 +1,11 @@
 <%- include('partials/header') %>
+<style media="screen">
+  body{
+    background-image: url("back.svg"); 
+
+  }
+
+</style>
 
 <div class="container mt-5">
   <h1>Login</h1>
@@ -15,7 +22,7 @@
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" value="work">
+              <input type="password" class="form-control" name="password" value="work" required>
             </div>
             <button type="submit" class="btn btn-dark">Login</button>
           </form>

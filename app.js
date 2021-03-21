@@ -91,6 +91,24 @@ const doctorAppointSchema = new mongoose.Schema({
   report: String
 });
 
+const productSchema = new mongoose.Schema({
+  name: String,
+  image: String,
+  description: String,
+  cost: String
+})
+
+const cartSchema = new mongoose.Schema({
+  userId: String,
+  items: Array
+})
+
+const orderSchema = new mongoose.Schema({
+  total: Number,
+  date: Date,
+  items: Array,
+  userId: String
+})
 
 
 
@@ -111,6 +129,10 @@ const TestAppoint = new mongoose.model("TestAppoint", testAppointSchema);
 const DoctorAppoint = new mongoose.model("DoctorAppoint", doctorAppointSchema);
 const Doctor = new mongoose.model("Doctor", doctorSchema);
 const Admin = new mongoose.model("Admin", adminSchema);
+
+const Product = new mongoose.model("Product", productSchema);
+const Cart = new mongoose.model("Cart", cartSchema);
+const Order = new mongoose.model("Order", orderSchema);
 
 
 passport.use('user-local', new LocalStrategy(User.authenticate()));
@@ -179,6 +201,165 @@ app.get("/admin/login", function(req, res){
 app.get("/admin/register", function(req, res){
   res.render("aregister");
 })
+
+// Pharmacy Routes
+
+app.get("/admin/addProduct", function(req, res){
+  res.render("addProduct");
+})
+
+app.post("/admin/addProduct", function(req, res){
+  const newProduct = new Product({
+    name: req.body.name,
+    image: req.body.image,
+    description: req.body.description,
+    cost: req.body.cost
+  });
+  newProduct.save((err) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      console.log("Saved successfully");
+      res.redirect("/products");
+    }
+  })
+})
+
+app.get("/products", function(req, res){
+  Product.find({}, (err, products) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      res.render("product", {products: products});
+    }
+  })
+})
+
+app.get("/cart", function(req, res){
+  Cart.find({userId: req.user._id}, function(err, cart){
+    if (err){
+      console.log(err);
+    }
+    else{
+
+      if (cart.length == 0){
+        res.send("Your Cart is empty");
+      }
+      else{
+        console.log(cart[0].items[0]);
+        res.render("cart", {cart: cart});
+      }
+    }
+  })
+})
+
+app.post("/addToCart", function(req, res){
+
+  Cart.find({userId: req.user._id}, function(err, cart){
+    var found = false;
+    if (cart.length != 0){
+      cart[0].items.forEach((item) => {
+        console.log(item);
+        if (item.id == req.body.itemId){
+          found = true;
+          item.qty = parseInt(item.qty) + parseInt(req.body.qty);
+        }
+      })
+    }
+
+    console.log("Value of found" + found);
+    if (found){
+      Cart.updateOne({userId: req.user._id}, {items: cart[0].items}, function(err){
+        if (err){
+          console.log(err);
+        }
+        else{
+          console.log("Order quantity updated");
+          res.redirect("/cart")
+        }
+      })
+    }
+
+    else{
+      const newItem = {
+        id: req.body.itemId,
+        name: req.body.name,
+        cost: req.body.cost,
+        image: req.body.image,
+        qty: req.body.qty
+      }
+      Cart.findOneAndUpdate({userId : req.user._id}, {
+        $push: {items: newItem}
+
+      },{upsert: true}, function(err){
+        if (err){
+          console.log(err);
+        }
+        else{
+          console.log("Item Added to Cart");
+          res.redirect("/cart")
+        }
+      })
+    }
+  })
+})
+
+app.get("/checkout", function(req, res){
+  console.log(req.user);
+  res.render("checkout", {user: req.user});
+})
+
+app.post("/checkout", function(req, res){
+
+  Cart.find({userId: req.user._id}, function(err, cart){
+
+    var total = 0;
+    cart[0].items.forEach((item) => {
+      total += item.cost * item.qty;
+    })
+    console.log(total);
+    const newOrder = new Order({
+      userId: req.user._id,
+      items: cart[0].items,
+      total: total,
+      date: new Date()
+    })
+
+    newOrder.save((err) => {
+      if (err){
+        console.log(err);
+      }
+      else{
+        console.log("Order placed");
+        Cart.deleteOne({userId: req.user._id}, function(err){
+          if (err){
+            console.log(err);
+          }
+          else{
+            console.log("Cart emptied");
+          }
+        })
+        res.redirect("/orders")
+      }
+    })
+  })
+})
+
+app.get("/orders", function(req, res){
+  Order.find({userId: req.user._id}, function(err, orders){
+    res.render("order", {orders: orders})
+  })
+})
+
+
+
+
+
+
+
+// ....................
 
 app.get("/profile", isLogged, function(req, res) {
   roles[req.user.role].find({_id: req.user._id}, (err, user) => {
