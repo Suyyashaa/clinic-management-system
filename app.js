@@ -178,7 +178,9 @@ function isAdmin(req, res, next){
   }
 }
 
-
+app.get("/template", function(req, res){
+  res.render("template");
+})
 
 app.get("/", function(req, res){
   res.render("home");
@@ -307,7 +309,6 @@ app.post("/addToCart", function(req, res){
 })
 
 app.get("/checkout", function(req, res){
-  console.log(req.user);
   res.render("checkout", {user: req.user});
 })
 
@@ -668,8 +669,6 @@ app.post("/login", function(req, res){
     else{
       passport.authenticate("user-local")(req, res, function(){
         console.log("Successfully logged in!");
-        console.log(req);
-        console.log(req.user);
         res.redirect("/");
       })
     }
