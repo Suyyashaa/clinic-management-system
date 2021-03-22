@@ -178,8 +178,8 @@ function isAdmin(req, res, next){
   }
 }
 
-app.get("/template", function(req, res){
-  res.render("template");
+app.get("/register1", function(req, res){
+  res.render("register1");
 })
 
 app.get("/", function(req, res){

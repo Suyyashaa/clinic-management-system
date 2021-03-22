@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+<style media="screen">
+  body{
+    margin-top: 148px;
+    background-image: url("back.svg");
+
+  }
+
+</style>
+
+<div class="container mt-5">
+  <h1>Login</h1>
+  <div class="row">
+    <div class="col-sm-7">
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /login route -->
+          <form action="/login" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" name="username" value="work@work.com">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" value="work" required>
+            </div>
+            <button type="submit" class="btn btn-dark">Login</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col">
+      <img src="assets/images/about-icon-01.svg" alt="" width="300" height="300">
+    </div>
+
+
+  </div>
+</div>
