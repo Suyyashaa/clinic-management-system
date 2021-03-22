@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <i class="fas fa-key fa-6x"></i>
+    <h1 class="display-3">Profile</h1>
+
+
+      <div class="card">
+        <p>Name: <%=user[0].name%></p>
+        <p>Username: <%=user[0].username%></p>
+        <p>dob: <%=user[0].dob%></p>
+        <p>Gender: <%=user[0].gender%></p>
+        <p>Address: <%=user[0].address%></p>
+        <p>Phone No: <%=user[0].phoneNo%></p>
+        <a href="/profile/delete/<%=user[0]._id%>">Delete</a>
+        <a href="/profile/edit">Edit</a>
+      </div>
+
+
+
+
+
+    <hr>
+
+    <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
+    <a class="btn btn-dark btn-lg" href="/admin/addTest" role="button">Add a test</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

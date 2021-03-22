@@ -178,9 +178,9 @@ function isAdmin(req, res, next){
   }
 }
 
-app.get("/register1", function(req, res){
-  res.render("register1");
-})
+// app.get("/test", function(req, res){
+//   res.render("profile1");
+// })
 
 app.get("/", function(req, res){
   res.render("home");
