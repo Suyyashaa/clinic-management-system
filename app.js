@@ -179,7 +179,7 @@ function isAdmin(req, res, next){
 }
 
 app.get("/test", function(req, res){
-  res.render("services1");
+  res.render("appointments1");
 })
 
 app.get("/", function(req, res){

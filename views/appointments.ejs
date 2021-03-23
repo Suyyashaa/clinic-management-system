@@ -1,29 +1,246 @@
 <%- include('partials/header') %>
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <i class="fas fa-flask fa-6x"></i>
-    <h1 class="display-3">Doctor Appointments</h1>
 
-    <%appoints.doctor.forEach((doctor) => {%>
-      <div class="card">
-        doctor
-        <p><%=doctor.name%></p>
-        <p><%=doctor.time%></p>
-        <p><%=doctor.date%></p>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
+
+
+
+<style media="screen">
+  body {
+
+    margin-top: 50px;
+    background-color: #f9f9fa;
+  }
+
+  .page-content {
+    background-image: url("assets/images/appointments-bg.svg")
+  }
+
+  .flex {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto
+  }
+
+  @media (max-width:991.98px) {
+    .padding {
+      padding: 1.5rem
+    }
+  }
+
+  @media (max-width:767.98px) {
+    .padding {
+      padding: 1rem
+    }
+  }
+
+  .padding {
+    padding: 5rem
+  }
+
+  .card {
+    background: #fff;
+    border-width: 0;
+    border-radius: .25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+    margin-bottom: 1.5rem
+  }
+
+  .card {
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(19, 24, 44, .125);
+    border-radius: 20px
+  }
+
+  .list-item {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word
+  }
+
+  .list-item.block .media {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0
+  }
+
+  .list-item.block .list-content {
+    padding: 1rem
+  }
+
+  .w-40 {
+    width: 40px !important;
+    height: 40px !important
+  }
+
+  .flex {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto
+  }
+
+  .text-color {
+    color: #5e676f
+  }
+
+  .text-sm {
+    font-size: .825rem
+  }
+
+  .h-1x {
+    height: 1.25rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical
+  }
+
+  .no-wrap {
+    white-space: nowrap
+  }
+
+  .list-row .list-item {
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .75rem .625rem
+  }
+
+  .list-item {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word
+  }
+
+
+  .list-row .list-item>* {
+    padding-left: .625rem;
+    padding-right: .625rem
+  }
+
+  .dropdown {
+    position: relative
+  }
+
+  a:focus,
+  a:hover {
+    text-decoration: none;
+  }
+
+  .list-item {
+    background: white;
+  }
+
+  .b-b-default {
+    border-bottom: 1px solid #e0e0e0
+  }
+</style>
+
+<div class="page-content page-container" id="page-content">
+  <div class="padding">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="container">
+
+          <div class="list list-row card">
+            <h3 class="card-title p-4 mx-auto b-b-default">Appointments</h3>
+
+            <div class="row">
+              <div class="col-md-6" id="example2-left">
+
+                <%appoints.doctor.forEach((doctor) => {%>
+                <div class="list-item b-b-default" data-id="13" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
+                  <div><i class="fas fa-stethoscope fa-2x" style="color: #0B8996"></i style></div>
+                  <div class="flex"> <a href="#" class="item-author text-color" data-abc="true"><%=doctor.name%></a>
+
+                  </div>
+                  <div class="no-wrap">
+                    <div class="item-date text-muted text-md d-none d-md-block"><%=doctor.date%></div>
+
+                  </div>
+                  <div class="no-wrap">
+
+                    <div class="item-date text-muted text-md d-none d-md-block"><%=doctor.time%></div>
+                  </div>
+                  <div>
+                    <div class="item-action dropdown"> <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true"> <i class="fas fa-ellipsis-v"></i> </a>
+                      <div class="dropdown-menu dropdown-menu-right bg-black" role="menu"> <a class="dropdown-item" href="#">
+                          <div title="Add to Calendar" class="addeventatc" data-direct="google">
+                            Add to Calendar
+                            <span class="start"><%=doctor.date%> <%=doctor.time%></span>
+
+                            <span class="title">Medical checkup</span>
+
+                          </div>
+                        </a>
+                        <div class="dropdown-divider"></div> <a class="dropdown-item trash" data-abc="true">Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <%});%>
+
+                <%appoints.test.forEach((test) => {%>
+                <div class="list-item b-b-default" data-id="13" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
+                  <div><i class="fas fa-vial fa-2x" style="color: #0B8996"></i style></div>
+                  <div class="flex"> <a href="#" class="item-author text-color" data-abc="true"><%=test.name%></a>
+
+                  </div>
+                  <div class="no-wrap">
+                    <div class="item-date text-muted text-md d-none d-md-block"><%=test.date%></div>
+
+                  </div>
+                  <div class="no-wrap">
+
+                    <div class="item-date text-muted text-md d-none d-md-block"><%=test.time%></div>
+                  </div>
+                  <div>
+                    <div class="item-action dropdown"> <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true"> <i class="fas fa-ellipsis-v"></i> </a>
+                      <div class="dropdown-menu dropdown-menu-right bg-black" role="menu"> <a class="dropdown-item" href="#">
+                        <div title="Add to Calendar" class="addeventatc" data-direct="google">
+                          Add to Calendar
+                          <span class="start"><%=test.date%> <%=test.time%></span>
+
+                          <span class="title">Medical checkup</span>
+
+                        </div>
+                      </a>
+                        <div class="dropdown-divider"></div> <a class="dropdown-item trash" data-abc="true">Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <%});%>
+
+              </div>
+
+              <div class="col-md-6">
+                <img src="assets/images/appointments.svg" alt="" width=450 height=450>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    <%});%>
-    <%appoints.test.forEach((test) => {%>
-      <div class="card">
-        test
-        <p><%=test.name%></p>
-        <p><%=test.time%></p>
-        <p><%=test.date%></p>
-      </div>
-    <%});%>
-
-
+    </div>
   </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 <%- include('partials/footer') %>
