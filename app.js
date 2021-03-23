@@ -178,9 +178,9 @@ function isAdmin(req, res, next){
   }
 }
 
-// app.get("/test", function(req, res){
-//   res.render("profile1");
-// })
+app.get("/test", function(req, res){
+  res.render("services1");
+})
 
 app.get("/", function(req, res){
   res.render("home");
@@ -432,6 +432,32 @@ app.get("/services", function(req, res){
     }
     else{
       res.render("services", {tests: test});
+    }
+  })
+})
+
+app.get("/appointments", isLogged, function(req, res){
+  var appoints = {
+    doctor: [],
+    test: []
+  }
+  TestAppoint.find({userId: req.user._id}, (err, testAppointments) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      appoints.test = testAppointments;
+      DoctorAppoint.find({userId: req.user._id}, (err, doctorAppointments) => {
+        if (err){
+          console.log(err);
+        }
+        else{
+          appoints.doctor = doctorAppointments;
+          console.log(appoints);
+          res.render("appointments", {appoints: appoints});
+      }
+      })
+
     }
   })
 })
