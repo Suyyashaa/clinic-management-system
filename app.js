@@ -179,7 +179,7 @@ function isAdmin(req, res, next){
 }
 
 app.get("/test", function(req, res){
-  res.render("appointments1");
+  res.render("schedule");
 })
 
 app.get("/", function(req, res){
@@ -555,28 +555,31 @@ app.post("/admin/editTest/edit/:id", function(req, res){
   })
 })
 
-
-app.get("/schedule/test", function(req, res){
+app.get("/schedule", function(req, res){
+  var options = {
+    tests: [],
+    doctor: []
+  }
   Test.find({}, (err, test) => {
     if (err){
       console.log(err);
     }
     else{
-      res.render("tschedule", {tests: test});
+      options.tests = test;
+      Doctor.find({}, (err, doctor) => {
+        if (err){
+          console.log(err);
+        }
+        else{
+          options.doctors = doctor;
+          res.render("schedule", {options: options});
+        }
+      })
+
     }
   })
 })
 
-app.get("/schedule/doctor", function(req, res){
-  Doctor.find({}, (err, doctor) => {
-    if (err){
-      console.log(err);
-    }
-    else{
-      res.render("dschedule", {doctors: doctor});
-    }
-  })
-})
 
 app.post("/schedule/test", function(req, res){
   const scheduleTest = new TestAppoint({
