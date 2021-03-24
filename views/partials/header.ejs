@@ -54,7 +54,8 @@ https://templatemo.com/tm-540-lava-landing-page
           <nav class="main-nav">
             <!-- ***** Logo Start ***** -->
             <a href="/" class="logo">
-              Lava
+              Clinic
+
             </a>
             <!-- ***** Logo End ***** -->
             <!-- ***** Menu Start ***** -->
@@ -63,16 +64,41 @@ https://templatemo.com/tm-540-lava-landing-page
               <li class="scroll-to-section"><a href="/#about" class="menu-item">About</a></li>
               <li class="scroll-to-section"><a href="/#testimonials" class="menu-item">Testimonials</a>
               </li>
-              <li class="submenu">
-                <a href="javascript:;">What can we do?</a>
-                <ul>
-
-                  <li><a href="/services" class="">Services</a></li>
-                  <li><a href="/schedule" class="">Schedule</a></li>
 
 
-                </ul>
-              </li>
+
+
+              <% if (admin) { %>
+                <li class="submenu">
+                  <a href="javascript:;">Admin</a>
+                  <ul>
+
+                    <li><a href="/admin/editTest" class="">Services</a></li>
+                    <li><a href="/admin/addTest" class="">Add Test</a></li>
+                    <li><a href="/admin/addProduct" class="">Add Product</a></li>
+
+
+                  </ul>
+                </li>
+
+              <%}else{%>
+                <li class="submenu">
+                  <a href="javascript:;">What can we do?</a>
+                  <ul>
+
+                    <li><a href="/services" class="">Services</a></li>
+                    <li><a href="/schedule" class="">Schedule</a></li>
+
+
+                  </ul>
+                </li>
+
+              <%}%>
+
+
+
+
+
               <li class="scroll-to-section"><a href="/#contact-us" class="menu-item">Contact Us</a></li>
 
               <li><a href="/cart" class=""><i class="fas fa-shopping-cart fa-2x"></i></a></li>
@@ -87,6 +113,9 @@ https://templatemo.com/tm-540-lava-landing-page
 
                   <li>
                     <a href="/profile">Profile</a>
+                  </li>
+                  <li>
+                    <a href="/orders">Orders</a>
                   </li>
                   <li><a href="/Appointments" class="">Appointments</a></li>
                   <li>
@@ -104,6 +133,16 @@ https://templatemo.com/tm-540-lava-landing-page
 
                 </ul>
               </li>
+
+
+
+
+
+
+
+
+
+
               <li><a href="/products" class=""><i class="fas fa-prescription-bottle-alt fa-2x"></i></a></li>
 
             </ul>

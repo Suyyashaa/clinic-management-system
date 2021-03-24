@@ -162,6 +162,16 @@ app.use(function(req, res, next){
   next();
 });
 
+app.use(function(req, res, next){
+  if (req.isAuthenticated() && req.user.role === "admin")
+  res.locals.admin = true;
+  else{
+    res.locals.admin = false;
+  }
+  //console.log(if(admin));
+  next();
+});
+
 function isLogged(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -179,7 +189,7 @@ function isAdmin(req, res, next){
 }
 
 app.get("/test", function(req, res){
-  res.render("order1");
+  res.render("alogin2");
 })
 
 app.get("/", function(req, res){
@@ -450,6 +460,9 @@ app.get("/services", function(req, res){
 })
 
 app.get("/appointments", isLogged, function(req, res){
+  if (req.user.role == "User"){
+
+
   var appoints = {
     doctor: [],
     test: []
@@ -473,6 +486,27 @@ app.get("/appointments", isLogged, function(req, res){
 
     }
   })
+}
+else{
+  var appoints = {
+    doctor: [],
+    test: []
+  }
+  DoctorAppoint.find({name: req.user.name}, (err, doctorAppointments) => {
+    if (err){
+      console.log(err);
+    }
+    else{
+      appoints.doctor = doctorAppointments;
+      console.log(appoints);
+      res.render("appointments", {appoints: appoints});
+  }
+  })
+
+
+}
+
+
 })
 
 app.get("/appointments/tests", isLogged, function(req, res){
