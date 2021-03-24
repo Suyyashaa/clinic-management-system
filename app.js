@@ -460,7 +460,7 @@ app.get("/services", function(req, res){
 })
 
 app.get("/appointments", isLogged, function(req, res){
-  if (req.user.role == "User"){
+  if (req.user.role == "user"){
 
 
   var appoints = {
