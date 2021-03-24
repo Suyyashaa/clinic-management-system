@@ -1,13 +1,46 @@
 <%- include('partials/header') %>
 
-<div class="container mt-5">
-  <h1>Update</h1>
+<link rel="stylesheet" type="text/css" href="../../../assets/css/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="../../../assets/css/font-awesome.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="../../../assets/css/templatemo-lava.css">
+
+<link rel="stylesheet" href="../../../assets/css/owl-carousel.css">
+
+<style media="screen">
+body{
+  background-image: url("../../../assets/images/edit-profile-bg.svg");
+  padding-bottom: 100px;
+}
+  .main-div{
+    margin: 40px 30px !important;
+  }
+
+  h1{
+    margin-top: 80px;
+    padding-top: 20px;
+  }
+
+</style>
+<body>
+
+
+<div class="main-div m-20">
+
+<div class="container m-20 main-div">
+  <h1>Edit a Test</h1>
   <div class="row">
-    <div class="col-sm-8">
-      <div class="card">
+    <div class="col-sm-8 col-lg-7">
+      <div class="card m-2">
         <div class="card-body">
 
           <!-- Makes POST request to /login route -->
+
+
           <form action="/admin/editTest/edit/<%=test[0]._id%>" method="POST">
             <div class="form-group">
               <label for="name">name</label>
@@ -19,8 +52,17 @@
             </div>
             <button type="submit" class="btn btn-dark">Update</button>
           </form>
+
+
+
         </div>
       </div>
     </div>
+    <div class="col col-lg-5">
+      <img src="../../../assets/images/editAtest.svg" alt="" height="400" width=400">
+
+    </div>
   </div>
 </div>
+</div>
+</body>

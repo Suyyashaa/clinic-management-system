@@ -179,7 +179,7 @@ function isAdmin(req, res, next){
 }
 
 app.get("/test", function(req, res){
-  res.render("schedule");
+  res.render("products1");
 })
 
 app.get("/", function(req, res){
@@ -206,7 +206,7 @@ app.get("/admin/register", function(req, res){
 
 // Pharmacy Routes
 
-app.get("/admin/addProduct", function(req, res){
+app.get("/admin/addProduct", isAdmin, function(req, res){
   res.render("addProduct");
 })
 
@@ -234,12 +234,25 @@ app.get("/products", function(req, res){
       console.log(err);
     }
     else{
-      res.render("product", {products: products});
+      splitProducts = [];
+      for (i = 0; i < products.length; i+=3){
+        var temp = [];
+        for (j = 0; j < 3; j++){
+          if (i+j >= products.length){
+            break;
+          }
+          temp.push(products[i+j]);
+        }
+        splitProducts.push(temp);
+      }
+      console.log(splitProducts);
+      console.log(products.length);
+      res.render("product", {splitProducts: splitProducts});
     }
   })
 })
 
-app.get("/cart", function(req, res){
+app.get("/cart", isLogged, function(req, res){
   Cart.find({userId: req.user._id}, function(err, cart){
     if (err){
       console.log(err);

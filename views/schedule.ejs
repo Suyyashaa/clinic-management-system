@@ -162,12 +162,6 @@
     cursor: pointer;
   }
 
-
-
-  a {
-    text-decoration: none;
-    color: #2c7715;
-  }
 </style>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -203,7 +197,7 @@
         <div class="form-group">
 
             <label for="name">Test Name</label>
-            <select name="name" >
+            <select name="name" required>
               <%options.tests.forEach((test) => {%>
                 <option value="<%=test.name%>"><%=test.name%></option>
                 <%});%>
@@ -215,11 +209,11 @@
 
         <div class="form-group">
           <label for="text">Test time</label>
-          <input type="time" class="form-control" name="time">
+          <input type="time" class="form-control" name="time" required>
         </div>
         <div class="form-group">
           <label for="text">Test date</label>
-          <input type="date" class="form-control" name="date">
+          <input type="date" class="form-control" name="date" required>
         </div>
 
 
@@ -240,7 +234,7 @@
 
         <div class="form-group">
           <label for="name">Docotor Name</label>
-          <select name="name" >
+          <select name="name" required>
             <%options.doctors.forEach((doctor) => {%>
               <option value="<%=doctor.name%>"><%=doctor.name%></option>
               <%});%>
@@ -248,12 +242,12 @@
 
         </div>
         <div class="form-group">
-          <label for="text">Doctor time</label>
-          <input type="time" class="form-control" name="time">
+          <label for="text">Appointment time</label>
+          <input type="time" class="form-control" name="time" required>
         </div>
         <div class="form-group">
-          <label for="text">Doctor date</label>
-          <input type="date" class="form-control" name="date">
+          <label for="text">Appointment date</label>
+          <input type="date" class="form-control" name="date" required>
         </div>
 
 
