@@ -1,36 +1,109 @@
-<%- include('partials/header1') %>
-
-<div class="jumbotron text-center">
-  <div class="container">
-    <i class="fas fa-key fa-6x"></i>
-    <h1 class="display-3">Orders</h1>
-
-    <%orders.forEach((order) => {%>
+<%- include('partials/header') %>
 
 
-        <h2><%=order.total%></h2>
-        <h5><%=order.date%></h5>
-        <%order.items.forEach((item) => {%>
-          <div class="card">
-            <p><%=item.name%></p>
-            <p><%=item.cost%></p>
-            <p><%=item.qty%></p>
-            <img src="<%=item.image%>" alt="" width="200" height="200">
+<style media="screen">
+  body {
+    margin-top: 80px;
+    /* background-image: url("assets/images/cart-bg.svg"); */
+    background: #eecda3;
+    background: -webkit-linear-gradient(to right, #eecda3, #ef629f);
+    background: linear-gradient(to right, #B0A4DA, #FEFEDF);
+    min-height: 100vh;
+  }
+</style>
+
+
+
+
+
+
+<div class="px-4 px-lg-0">
+  <!-- For demo purpose -->
+  <div class="container py-5 text-center">
+    <h1 class="display-4">Your orders</h1>
+
+  </div>
+  <!-- End -->
+  <div class="pb-5">
+    <div class="container">
+      <%orders.forEach((order) => {%>
+
+      <div class="row">
+        <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+
+          <!-- Shopping cart table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="p-2 px-3 text-uppercase">Product</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Price</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <%order.items.forEach((item) => {%>
+
+
+
+                <tr>
+                  <th scope="row" class="border-0">
+                    <div class="p-2">
+
+                      <img src="<%=item.image%>" alt="" width="70" class="img-fluid rounded shadow-sm">
+
+
+                      <div class="ml-3 d-inline-block align-middle">
+                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle"><%=item.name%></a></h5>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="border-0 align-middle"><strong>Rs.<%=item.cost%></strong></td>
+                  <td class="border-0 align-middle"><strong><%=item.qty%></strong></td>
+
+                </tr>
+                <%});%>
+
+
+              </tbody>
+
+            </table>
+
 
           </div>
-        <%});%>
+          <!-- End -->
+          <div class="row py-5 p-4 bg-white rounded shadow-sm">
 
+            <div class="col-lg-12">
+              <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
+              <div class="p-4">
+                <ul class="list-unstyled mb-4">
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Id </strong><strong><%=order._id%></strong></li>
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order date </strong><strong><%=order.date%></strong></li>
+
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>Rs. <%=order.total%></strong></li>
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>Rs. 0.00</strong></li>
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>Rs 0.00</strong></li>
+                  <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                    <h5 class="font-weight-bold">Rs. <%=order.total%></h5>
+                  </li>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <%});%>
 
 
 
 
-    <hr>
-
-
-    <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
-    <a class="btn btn-dark btn-lg" href="/admin/addTest" role="button">Add a test</a>
+    </div>
   </div>
 </div>
-
-<%- include('partials/footer') %>
