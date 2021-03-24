@@ -1,32 +1,121 @@
 <%- include('partials/header') %>
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <i class="fas fa-key fa-6x"></i>
-    <h1 class="display-3">Cart</h1>
 
-    <%var total = 0;%>
-    <%cart[0].items.forEach((item) => {%>
-      <%total += item.cost * item.qty%>
-      <div class="card">
-        <p><%=item.name%></p>
-        <p><%=item.cost%></p>
-        <p><%=item.qty%></p>
-        <img src="<%=item.image%>" alt="" width="200" height="200">
+<style media="screen">
+  body {
+    margin-top: 80px;
+    /* background-image: url("assets/images/cart-bg.svg"); */
+    background: #eecda3;
+    background: -webkit-linear-gradient(to right, #eecda3, #ef629f);
+    background: linear-gradient(to right, #B0A4DA, #FEFEDF);
+    min-height: 100vh;
+  }
+</style>
 
+
+
+
+
+
+<div class="px-4 px-lg-0">
+  <!-- For demo purpose -->
+  <div class="container py-5 text-center">
+    <h1 class="display-4">Your cart</h1>
+
+  </div>
+  <!-- End -->
+
+  <div class="pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+
+          <!-- Shopping cart table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="p-2 px-3 text-uppercase">Product</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Price</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Remove</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <%var total = 0;%>
+                <%cart[0].items.forEach((item) => {%>
+                <%total += item.cost * item.qty%>
+
+                <tr>
+                  <th scope="row" class="border-0">
+                    <div class="p-2">
+
+                      <img src="<%=item.image%>" alt="" width="70" class="img-fluid rounded shadow-sm">
+
+
+                      <div class="ml-3 d-inline-block align-middle">
+                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">item.name</a></h5><span class="text-muted font-weight-normal font-italic d-block">Category: Watches</span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="border-0 align-middle"><strong>Rs.<%= item.cost%></strong></td>
+                  <td class="border-0 align-middle"><strong><%=item.qty%></strong></td>
+                  <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                </tr>
+                <%});%>
+
+
+              </tbody>
+
+            </table>
+          </div>
+          <!-- End -->
+        </div>
       </div>
 
-      <%});%>
-      <h1>Total: <%=total%></h1>
+      <div class="row py-5 p-4 bg-white rounded shadow-sm">
+        <div class="col-lg-6">
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Payment Method</div>
+          <div class="p-4">
+            <p class="font-italic mb-4">Please select your preferred shipping method.</p>
+            <div class="input-group mb-4 border rounded-pill p-2">
+              <input type="text" placeholder="Apply coupon" aria-describedby="button-addon3" class="form-control border-0" value="Cash on delivery">
+              <div class="input-group-append border-0">
+                <button id="button-addon3" type="button" class="btn btn-dark px-4 rounded-pill"><i class="fa fa-shopping-bag mr-2"></i>Select Method</button>
+              </div>
+            </div>
+          </div>
 
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Instructions for seller</div>
+          <div class="p-4">
+            <p class="font-italic mb-4">If you have some information for the seller you can leave them in the box below</p>
+            <textarea name="" cols="30" rows="2" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
+          <div class="p-4">
+            <p class="font-italic mb-4">Shipping and additional costs are calculated based on values you have entered.</p>
+            <ul class="list-unstyled mb-4">
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>Rs <%=total%></strong></li>
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>Rs. 0.00</strong></li>
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>Rs 0.00</strong></li>
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                <h5 class="font-weight-bold">Rs <%=total%></h5>
+              </li>
+            </ul><a href="/checkout" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+          </div>
+        </div>
+      </div>
 
-
-
-    <hr>
-
-    <a class="btn btn-light btn-lg" href="/checkout" role="button">Checkout</a>
-    <a class="btn btn-dark btn-lg" href="/products" role="button">Products</a>
+    </div>
   </div>
 </div>
-
-<%- include('partials/footer') %>
