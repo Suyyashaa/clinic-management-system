@@ -602,7 +602,7 @@ app.post("/admin/editTest/edit/:id", function(req, res){
   })
 })
 
-app.get("/schedule", function(req, res){
+app.get("/schedule", isLogged, function(req, res){
   var options = {
     tests: [],
     doctor: []
