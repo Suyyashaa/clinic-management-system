@@ -377,6 +377,34 @@ app.get("/orders", function(req, res){
   })
 })
 
+app.get("/cart/delete/:id", function(req, res){
+  Cart.find({userId: req.user._id}, function(err, cart){
+    if (err){
+      console.log(err);
+    }
+    else{
+      console.log(req.params.id);
+      items = cart[0].items;
+      items = items.filter(function(item){
+        return (item.id != req.params.id);
+      })
+
+      Cart.updateOne({userId: req.user._id}, {items: items}, function(err){
+        if (err){
+          console.log(err);
+        }
+        else{
+          console.log("Product deleted");
+          res.redirect("/cart")
+        }
+      })
+
+
+
+    }
+  })
+})
+
 
 
 
