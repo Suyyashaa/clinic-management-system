@@ -809,8 +809,7 @@ app.post("/admin/login", function(req, res){
     }
     else{
       passport.authenticate("admin-local")(req, res, function(){
-        console.log("Successfully
-         in!");
+        console.log("Successfullyin!");
         console.log(req.user);
         res.redirect("/");
       })
